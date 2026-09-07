@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compound Sentences Practice Quiz</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --correct: #15803d;
+      --correct-bg: #dcfce7;
+      --incorrect: #b91c1c;
+      --incorrect-bg: #fee2e2;
+      --warn-bg: #fff7ed;
+      --warn: #9a3412;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 28px rgba(37, 99, 235, .18);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      opacity: .95;
+    }
+
+    .progress-wrap {
+      margin-top: 18px;
+      background: rgba(255,255,255,.28);
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: white;
+      transition: width .3s ease;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .question-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 18px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .qnum {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+    }
+
+    .question {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      border: 2px solid var(--line);
+      background: white;
+      border-radius: 12px;
+      padding: 13px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .option:disabled {
+      cursor: default;
+    }
+
+    .option.correct {
+      border-color: var(--correct);
+      background: var(--correct-bg);
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .option.incorrect {
+      border-color: var(--incorrect);
+      background: var(--incorrect-bg);
+      color: #7f1d1d;
+      font-weight: 700;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 10px;
+      display: none;
+      font-size: 15px;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.correct {
+      background: var(--correct-bg);
+      color: #14532d;
+      border-left: 5px solid var(--correct);
+    }
+    .feedback.incorrect {
+      background: var(--incorrect-bg);
+      color: #7f1d1d;
+      border-left: 5px solid var(--incorrect);
+    }
+
+    .hint {
+      margin-top: 12px;
+      border: 1px dashed #cbd5e1;
+      background: #f8fafc;
+      padding: 11px 13px;
+      border-radius: 10px;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .hint strong { color: #334155; }
+
+    .results {
+      display: none;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 28px;
+      margin-top: 24px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 8px 26px rgba(0,0,0,.08);
+    }
+
+    .results.show { display: block; }
+
+    .score {
+      font-size: 54px;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 8px 0;
+    }
+
+    .result-message {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .review-note {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn:hover { background: var(--accent-dark); }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 22px 18px; }
+      .question-card { padding: 18px; }
+      .question { font-size: 18px; }
+      .option { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Compound Sentences Practice Quiz</h1>
+      <p>Choose the best answer for each question. You will get immediate feedback after every answer.</p>
+      <div class="progress-wrap" aria-label="Quiz progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="status" id="statusText">0 of 10 answered</div>
+    </section>
+
+    <main id="quiz"></main>
+
+    <section class="results" id="results">
+      <h2>Quiz Complete!</h2>
+      <div class="score" id="scoreText"></div>
+      <div class="result-message" id="resultMessage"></div>
+      <div class="review-note">Review the feedback above for any questions you missed.</div>
+      <button class="btn" onclick="restartQuiz()">Try Again</button>
+    </section>
+
+    <div class="footer">Compound Sentences • FANBOYS • Independent Clauses</div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Which statement best describes a compound sentence?",
+        options: [
+          "It contains two independent clauses joined correctly.",
+          "It contains one subject and one verb.",
+          "It must contain three complete sentences.",
+          "It is any sentence that contains a comma."
+        ],
+        answer: 0,
+        explanation: "A compound sentence contains two independent clauses that are joined correctly.",
+        hint: "Think about how many complete thoughts are required."
+      },
+      {
+        question: "Which sentence is a correctly written compound sentence?",
+        options: [
+          "Mia finished her homework, and she packed her backpack.",
+          "Mia finished her homework and, she packed her backpack.",
+          "Mia finished her homework, she packed her backpack.",
+          "Mia finished her homework and she packed, her backpack."
+        ],
+        answer: 0,
+        explanation: "Both parts are complete thoughts, and they are joined with a comma plus the coordinating conjunction “and.”",
+        hint: "Look for two complete thoughts joined with the correct punctuation pattern."
+      },
+      {
+        question: "Choose the conjunction that best completes the sentence: “I wanted to ride my bike, ___ it started to rain.”",
+        options: ["and", "but", "so", "or"],
+        answer: 1,
+        explanation: "“But” shows contrast between wanting to ride the bike and the rain interrupting that plan.",
+        hint: "Decide whether the second thought adds information, shows contrast, gives a choice, or gives a result."
+      },
+      {
+        question: "Which pair contains TWO independent clauses that could be combined into a compound sentence?",
+        options: [
+          "The dog barked. The baby woke up.",
+          "After the game. We went home.",
+          "Running through the park. My brother.",
+          "Because it was raining. Under the tree."
+        ],
+        answer: 0,
+        explanation: "“The dog barked” and “The baby woke up” can each stand alone as complete sentences.",
+        hint: "Test whether each part could stand alone as a complete sentence."
+      },
+      {
+        question: "Combine these simple sentences correctly: “The movie was long. I enjoyed it.”",
+        options: [
+          "The movie was long, but I enjoyed it.",
+          "The movie was long but, I enjoyed it.",
+          "The movie was long, I enjoyed it.",
+          "The movie was long. But, I enjoyed it."
+        ],
+        answer: 0,
+        explanation: "The two independent clauses are correctly joined with a comma and “but,” which shows contrast.",
+        hint: "Use the compound-sentence pattern and choose a conjunction that shows contrast."
+      },
+      {
+        question: "Which sentence uses the coordinating conjunction “so” correctly?",
+        options: [
+          "It was getting dark, so we went inside.",
+          "It was getting dark, so because we went inside.",
+          "It was getting dark so, we went inside.",
+          "It was getting dark, or we went inside."
+        ],
+        answer: 0,
+        explanation: "The second clause is a result of the first, and the comma is correctly placed before “so.”",
+        hint: "Look for a sentence where the second complete thought is a result of the first."
+      },
+      {
+        question: "Which sentence is NOT correctly written as a compound sentence?",
+        options: [
+          "We arrived early, so we found good seats.",
+          "I wanted cereal, but there was none left.",
+          "We can play outside, or we can stay indoors.",
+          "I finished my book, I started another one."
+        ],
+        answer: 3,
+        explanation: "“I finished my book, I started another one” joins two independent clauses with only a comma. A coordinating conjunction is needed.",
+        hint: "Check what appears between the two complete thoughts in each sentence."
+      },
+      {
+        question: "Which word is NOT one of the FANBOYS coordinating conjunctions?",
+        options: ["yet", "because", "nor", "for"],
+        answer: 1,
+        explanation: "FANBOYS stands for for, and, nor, but, or, yet, so. “Because” is not one of them.",
+        hint: "Recall what each letter in F-A-N-B-O-Y-S represents."
+      },
+      {
+        question: "Choose the conjunction that best completes the sentence: “Would you like to play basketball, ___ would you rather play soccer?”",
+        options: ["or", "so", "yet", "for"],
+        answer: 0,
+        explanation: "“Or” is used to show a choice between basketball and soccer.",
+        hint: "The speaker is giving someone two choices."
+      },
+      {
+        question: "Which sentence follows this pattern: independent clause + comma + coordinating conjunction + independent clause + period?",
+        options: [
+          "The sun was shining, and we walked to the park.",
+          "The sun was shining and bright.",
+          "Because the sun was shining, we walked to the park.",
+          "The bright sun shining over the park."
+        ],
+        answer: 0,
+        explanation: "“The sun was shining” and “we walked to the park” are both independent clauses joined by a comma and “and.”",
+        hint: "Check that BOTH sides of the joining word can stand alone as complete sentences."
+      }
+    ];
+
+    let score = 0;
+    let answered = 0;
+    let responses = Array(quizData.length).fill(null);
+
+    const quizEl = document.getElementById("quiz");
+    const progressBar = document.getElementById("progressBar");
+    const statusText = document.getElementById("statusText");
+    const results = document.getElementById("results");
+    const scoreText = document.getElementById("scoreText");
+    const resultMessage = document.getElementById("resultMessage");
+
+    function renderQuiz() {
+      quizEl.innerHTML = "";
+
+      quizData.forEach((item, index) => {
+        const card = document.createElement("section");
+        card.className = "question-card";
+        card.id = `question-${index}`;
+
+        card.innerHTML = `
+          <div class="qnum">Question ${index + 1}</div>
+          <p class="question">${item.question}</p>
+          <div class="options">
+            ${item.options.map((opt, i) => `
+              <button class="option" data-q="${index}" data-o="${i}">
+                ${String.fromCharCode(65 + i)}. ${opt}
+              </button>
+            `).join("")}
+          </div>
+          <div class="feedback" id="feedback-${index}"></div>
+          <div class="hint"><strong>Hint:</strong> ${item.hint}</div>
+        `;
+
+        quizEl.appendChild(card);
+      });
+
+      document.querySelectorAll(".option").forEach(btn => {
+        btn.addEventListener("click", handleAnswer);
+      });
+    }
+
+    function handleAnswer(event) {
+      const btn = event.currentTarget;
+      const qIndex = Number(btn.dataset.q);
+      const oIndex = Number(btn.dataset.o);
+
+      if (responses[qIndex] !== null) return;
+
+      responses[qIndex] = oIndex;
+      answered++;
+
+      const item = quizData[qIndex];
+      const card = document.getElementById(`question-${qIndex}`);
+      const buttons = card.querySelectorAll(".option");
+      const feedback = document.getElementById(`feedback-${qIndex}`);
+
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.answer) b.classList.add("correct");
+      });
+
+      if (oIndex === item.answer) {
+        score++;
+        feedback.className = "feedback show correct";
+        feedback.innerHTML = `<strong>Correct!</strong> ${item.explanation}`;
+      } else {
+        btn.classList.add("incorrect");
+        feedback.className = "feedback show incorrect";
+        feedback.innerHTML = `<strong>Not quite.</strong> ${item.explanation}`;
+      }
+
+      updateProgress();
+
+      if (answered === quizData.length) {
+        showResults();
+      }
+    }
+
+    function updateProgress() {
+      const percent = (answered / quizData.length) * 100;
+      progressBar.style.width = `${percent}%`;
+      statusText.textContent = `${answered} of ${quizData.length} answered`;
+    }
+
+    function showResults() {
+      const percent = Math.round((score / quizData.length) * 100);
+      scoreText.textContent = `${score}/${quizData.length} (${percent}%)`;
+
+      if (percent === 100) {
+        resultMessage.textContent = "Excellent work — you mastered compound sentences!";
+      } else if (percent >= 80) {
+        resultMessage.textContent = "Great job — you have a strong understanding of compound sentences.";
+      } else if (percent >= 70) {
+        resultMessage.textContent = "Good work — review the questions you missed and try again.";
+      } else {
+        resultMessage.textContent = "Keep practicing — focus on independent clauses, commas, and FANBOYS.";
+      }
+
+      results.classList.add("show");
+      results.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function restartQuiz() {
+      score = 0;
+      answered = 0;
+      responses = Array(quizData.length).fill(null);
+      results.classList.remove("show");
+      updateProgress();
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderQuiz();
+    updateProgress();
+  </script>
+</body>
+</html>
